@@ -1,4 +1,15 @@
 Rails.application.routes.draw do
+  root 'application#index'
+
+  resources :games, only: [:index, :show] do
+    resources :characters, only: [:index, :show]
+    resources :matches, only: [:index, :show]
+  end
+
+  resources :players, only: [:index, :show]
+
+  resources :events, only: [:index, :show]
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
