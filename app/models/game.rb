@@ -3,5 +3,5 @@ class Game < ActiveRecord::Base
   has_many :matches
   has_many :events, through: :matches
 
-  validates :name, presence: true
+  validates :name, :aliases, presence: true
 end
