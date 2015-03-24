@@ -1,8 +1,8 @@
 class CreateCharacters < ActiveRecord::Migration
   def change
     create_table :characters do |t|
-      t.string :name
-      t.string :game
+      t.string  :name
+      t.integer :game
 
       t.timestamps null: false
     end
