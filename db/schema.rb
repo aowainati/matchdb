@@ -11,10 +11,43 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150319232016) do
+ActiveRecord::Schema.define(version: 20150324015634) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "characters", force: :cascade do |t|
+    t.string   "name"
+    t.string   "game"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.string    "name"
+    t.daterange "duration"
+    t.datetime  "created_at", null: false
+    t.datetime  "updated_at", null: false
+  end
+
+  create_table "games", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "matches", force: :cascade do |t|
+    t.string   "title"
+    t.text     "desc"
+    t.integer  "event_id"
+    t.integer  "game_id"
+    t.json     "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "matches", ["event_id"], name: "index_matches_on_event_id", using: :btree
+  add_index "matches", ["game_id"], name: "index_matches_on_game_id", using: :btree
 
   create_table "players", force: :cascade do |t|
     t.string   "name"
@@ -22,4 +55,6 @@ ActiveRecord::Schema.define(version: 20150319232016) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "matches", "events"
+  add_foreign_key "matches", "games"
 end
