@@ -23,6 +23,9 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Postgres
 gem 'pg'
 
+# Nokogiri
+gem 'nokogiri'
+
 # Add rspec for development and test
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'

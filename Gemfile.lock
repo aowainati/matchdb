@@ -179,6 +179,7 @@ DEPENDENCIES
   factory_girl_rails (~> 4.0)
   jbuilder (~> 2.0)
   jquery-rails
+  nokogiri
   passenger
   pg
   rails (= 4.2.0)
