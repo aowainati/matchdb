@@ -11,10 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150324221652) do
+ActiveRecord::Schema.define(version: 20150326203423) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "channels", force: :cascade do |t|
+    t.string   "name"
+    t.text     "desc"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "characters", force: :cascade do |t|
     t.string   "name"
@@ -50,8 +57,10 @@ ActiveRecord::Schema.define(version: 20150324221652) do
     t.json     "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "channel_id"
   end
 
+  add_index "matches", ["channel_id"], name: "index_matches_on_channel_id", using: :btree
   add_index "matches", ["event_id"], name: "index_matches_on_event_id", using: :btree
   add_index "matches", ["game_id"], name: "index_matches_on_game_id", using: :btree
 
@@ -61,6 +70,7 @@ ActiveRecord::Schema.define(version: 20150324221652) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "matches", "channels"
   add_foreign_key "matches", "events"
   add_foreign_key "matches", "games"
 end
