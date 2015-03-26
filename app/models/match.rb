@@ -3,5 +3,5 @@ class Match < ActiveRecord::Base
   belongs_to :game
   belongs_to :channel
 
-  validates :title, :desc, :event, :game, :data, presence: true
+  validates :title, :desc, :game, :data, presence: true
 end
