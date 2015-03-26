@@ -12,7 +12,7 @@ def convert_arr_to_pg(arr)
 end
 
 creation_logger = Proc.new do |thing|
-  Rails.logger.info("[Scraper] Couldn't find #{thing} in DB, created a new one.")
+  Rails.logger.info("[DB Seed Script] Couldn't find #{thing} in DB, created a new one.")
 end
 
 GAMES_TO_ALIASES = {
@@ -173,7 +173,7 @@ end
 CHANNEL_NAMES_TO_DATA = {
   "YogaFlame24" => { 
     "desc" => "YogaFlame24",
-    "regex" => /(?<p1>[a-z0-9 ]+)\((?<c1>[a-z0-9 ]+)\) vs (?<p2>[a-z0-9 ]+)\((?<c2>[a-z0-9 ]+)\) (?<game>[a-z0-9]+)/i
+    "regex" => /(?<p1>[a-z0-9 ]+)\((?<c1>[a-z0-9 ]+)\)\s+vs\s+(?<p2>[a-z0-9 ]+)\((?<c2>[a-z0-9 ]+)\)\s+(?<game>[a-z0-9]+)/i
   }
 }
 
