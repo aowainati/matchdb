@@ -170,10 +170,13 @@ GAMES_TO_CHARACTERS.each do |game_name, char_list|
   end
 end
 
-CHANNEL_NAME_TO_DESCRIPTION = {
-  "YogaFlame24" => "YogaFlame24"
+CHANNEL_NAMES_TO_DATA = {
+  "YogaFlame24" => { 
+    "desc" => "YogaFlame24",
+    "regex" => /(?<p1>[a-z0-9 ]+)\((?<c1>[a-z0-9 ]+)\) vs (?<p2>[a-z0-9 ]+)\((?<c2>[a-z0-9 ]+)\) (?<game>[a-z0-9]+)/i
+  }
 }
 
-CHANNEL_NAME_TO_DESCRIPTION.each do |name, desc|
-  Channel.find_or_create_by(name: name, desc: desc, &creation_logger)
+CHANNEL_NAMES_TO_DATA.each do |name, data|
+  Channel.find_or_create_by(name: name, desc: data["desc"], title_regex_yaml: YAML::dump(data["regex"]), &creation_logger)
 end
