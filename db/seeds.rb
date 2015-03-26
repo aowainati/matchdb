@@ -6,8 +6,13 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
+# Utility for converting Ruby arrays into Postgres arrays
 def convert_arr_to_pg(arr)
   '{' + arr.join(",") + '}'
+end
+
+creation_logger = Proc.new do |thing|
+  Rails.logger.info("[Scraper] Couldn't find #{thing} in DB, created a new one.")
 end
 
 GAMES_TO_ALIASES = {
@@ -17,7 +22,7 @@ GAMES_TO_ALIASES = {
 }
 
 GAMES_TO_ALIASES.each do |g, a|
-  Game.find_or_create_by(name: g, aliases: convert_arr_to_pg(a))
+  Game.find_or_create_by(name: g, aliases: convert_arr_to_pg(a), &creation_logger)
 end
 
 GAMES_TO_CHARACTERS = {
@@ -161,6 +166,14 @@ GAMES_TO_CHARACTERS.each do |game_name, char_list|
       aliases.concat(game_aliases[char_name] || [])
     end
 
-    Character.find_or_create_by(name: char_name, game: game, aliases: convert_arr_to_pg(aliases))
+    Character.find_or_create_by(name: char_name, game: game, aliases: convert_arr_to_pg(aliases), &creation_logger)
   end
+end
+
+CHANNEL_NAME_TO_DESCRIPTION = {
+  "YogaFlame24" => "YogaFlame24"
+}
+
+CHANNEL_NAME_TO_DESCRIPTION.each do |name, desc|
+  Channel.find_or_create_by(name: name, desc: desc, &creation_logger)
 end
