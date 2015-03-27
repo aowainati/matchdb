@@ -28,6 +28,7 @@ gem 'nokogiri'
 
 # Pry Console
 gem 'pry-rails'
+gem 'pry-byebug'
 
 # Add rspec for development and test
 group :development, :test do
