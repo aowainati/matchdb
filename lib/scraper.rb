@@ -37,15 +37,15 @@ class Scraper
       #            Each player will have one or more characters
       #            Impossible to know exactly which chars played against which if multiple chars selected
       player_char_data = {
-        parsed_data["p1"] => parsed_data["c1"],
-        parsed_data["p2"] => parsed_data["c2"]
+        parsed_data["p1"].strip => parsed_data["c1"].strip, # TODO: Make value an array
+        parsed_data["p2"].strip => parsed_data["c2"].strip
       }
       # TODO : Construct player objects if necessary
       # TODO : Validate character data with character table
       
       if game
         match_obj = Match.find_or_initialize_by(title: match_title,
-                                                desc: @@base_youtube_video % attributes["href"].content,
+                                                url: @@base_youtube_video % attributes["href"].content,
                                                 game: game.take,
                                                 event: nil, # TODO
                                                 channel: channel)
