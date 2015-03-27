@@ -26,6 +26,9 @@ gem 'pg'
 # Nokogiri
 gem 'nokogiri'
 
+# Pry Console
+gem 'pry-rails'
+
 # Add rspec for development and test
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'
