@@ -173,7 +173,11 @@ end
 CHANNEL_NAMES_TO_DATA = {
   "YogaFlame24" => { 
     "desc" => "YogaFlame24",
-    "regex" => /(?<p1>[a-z0-9 ]+)\((?<c1>[a-z0-9 ]+)\)\s+vs\s+(?<p2>[a-z0-9 ]+)\((?<c2>[a-z0-9 ]+)\)\s+(?<game>[a-z0-9]+)/i
+    "regex" => /(?<p1>.+)\((?<c1>.+)\)\s+vs\s+(?<p2>.+)\((?<c2>.+)\)\s+(?<game>[a-z0-9]+)/i
+  },
+  "teamspooky" => {
+    "desc" => "TeamSpooky",
+    "regex" => /(?<event>.+)-(?<game>.+)-(?<p1>.+)\((?<c1>.+)\)\svs\s(?<p2>.+)\((?<c2>.+)\)/i
   }
 }
 

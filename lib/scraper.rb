@@ -22,10 +22,14 @@ class Scraper
     create_matches_from_fragment!(initial_fragment, next_page_url_from_fragment(initial_fragment))
   end
 
-  def create_matches_from_fragment!(fragment, next_page_url, iterations=5)
+  def create_matches_from_fragment!(fragment, next_page_url, iterations=20)
     elements_from_fragment(fragment).each do |element|
       match = match_from_element_and_channel(element)
-      match.save if match
+      if match
+        match.save
+        Rails.logger.info("[Scraper] Successfully made match object: #{match.inspect}")
+      end
+#      match.save if match
     end
 
     if iterations > 1
@@ -60,7 +64,7 @@ class Scraper
 
     match_obj = nil
     if parsed_data
-      game = Game.where("? = ANY (aliases)", parsed_data["game"])
+      game = Game.where("? = ANY (aliases)", parsed_data["game"].strip).take
 
       # TODO : Make this more robust
       # Invariant: There will always be exactly 2 players
@@ -70,18 +74,20 @@ class Scraper
         parsed_data["p1"].strip => parsed_data["c1"].strip, # TODO: Make value an array
         parsed_data["p2"].strip => parsed_data["c2"].strip
       }
+
       # TODO : Construct player objects if necessary
       # TODO : Validate character data with character table
 
       if game
         match_obj = Match.find_or_initialize_by(title: match_title,
                                                 url: @@base_youtube_video % attributes["href"].content,
-                                                game: game.take,
+                                                game: game,
                                                 event: nil, # TODO
                                                 channel: @channel)
         match_obj.data = player_char_data
         match_obj
       else
+        Rails.logger.warn("[Scraper] Couldn't find game #{parsed_data['game']}")
         nil
       end
     else

@@ -77,6 +77,12 @@ RSpec.describe Scraper do
       expect(match.data).to eq({"xWAx Vortex" => "Guile", "BRONXPUERTOROCK" => "Akuma"})
     end
 
+    it 'returns nil from an element with an invalid game' do
+      allow(Game).to receive(:where) { double("GameRelation", take: nil) }
+      match = scraper.match_from_element_and_channel(dummy_element)
+      expect(match).to be_nil
+    end
+
     it 'returns nil from an element with invalid title format' do
       match = scraper.match_from_element_and_channel(dummy_element_invalid)
       expect(match).to be_nil
