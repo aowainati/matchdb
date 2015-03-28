@@ -30,6 +30,9 @@ gem 'nokogiri'
 gem 'pry-rails'
 gem 'pry-byebug'
 
+# New Relic APM
+gem 'newrelic_rpm'
+
 # Add rspec for development and test
 group :development, :test do
   gem 'rspec-rails', '~> 3.2.1'
