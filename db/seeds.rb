@@ -16,13 +16,19 @@ creation_logger = Proc.new do |thing|
 end
 
 GAMES_TO_ALIASES = {
-  "Ultra Street Fighter 4" => ["Ultra Street Fighter 4","Ultra Street Fighter IV","USF4","USFIV"],
-  "Ultimate Marvel vs. Capcom 3" => ["Ultimate Marvel vs. Capcom 3","UMVC3"],
-  "Super Smash Brothers Melee" => ["Melee","SSBM"]
+  "Ultra Street Fighter 4" => ["Ultra Street Fighter 4",
+                               "Ultra Street Fighter IV",
+                               "USF4",
+                               "USFIV"],
+  "Ultimate Marvel vs. Capcom 3" => ["Ultimate Marvel vs. Capcom 3",
+                                     "UMVC3"],
+  "Super Smash Brothers Melee" => ["Melee",
+                                   "SSBM"],
+  "Guilty Gear Xrd" => ["GGXRD"]
 }
 
 GAMES_TO_ALIASES.each do |g, a|
-  Game.find_or_create_by(name: g, aliases: convert_arr_to_pg(a), &creation_logger)
+  Game.find_or_create_by(name: g, aliases: convert_arr_to_pg(a.append(g).uniq), &creation_logger)
 end
 
 GAMES_TO_CHARACTERS = {
@@ -145,7 +151,25 @@ GAMES_TO_CHARACTERS = {
              "Sheik",
              "Yoshi",
              "Young Link",
-             "Zelda"]
+             "Zelda"],
+  "GGXRD" => [
+              "Sol Badguy",
+              "Ky Kiske",
+              "Millia Rage",
+              "Zato-1",
+              "May",
+              "Potemkin",
+              "Chipp Zanuff",
+              "Venom",
+              "Axl Low",
+              "I-No",
+              "Faust",
+              "Slayer",
+              "Sin Kiske",
+              "Bedman",
+              "Ramlethal Valentine",
+              "Elphelt",
+              "Leo Whitefang"]
 }
 
 CHARACTER_ALIASES = {
@@ -153,6 +177,9 @@ CHARACTER_ALIASES = {
     "M.Bison" => ["Dictator", "M. Bison"],
     "Vega" => ["Claw"],
     "Balrog" => ["Boxer"]
+  },
+  "GGXRD" => {
+    "Zato-1" => ["Eddie", "Zato-1/Eddie", "Eddie/Zato-1"]
   }
 }
 
@@ -166,7 +193,7 @@ GAMES_TO_CHARACTERS.each do |game_name, char_list|
       aliases.concat(game_aliases[char_name] || [])
     end
 
-    Character.find_or_create_by(name: char_name, game: game, aliases: convert_arr_to_pg(aliases), &creation_logger)
+    Character.find_or_create_by(name: char_name, game: game, aliases: convert_arr_to_pg(aliases.uniq), &creation_logger)
   end
 end
 
@@ -177,7 +204,7 @@ CHANNEL_NAMES_TO_DATA = {
   },
   "teamspooky" => {
     "desc" => "TeamSpooky",
-    "regex" => /(?<event>.+)-(?<game>.+)-(?<p1>.+)\((?<c1>.+)\)\svs\s(?<p2>.+)\((?<c2>.+)\)/i
+    "regex" => /(?<event>[^-]+)-(?<game>[^-]+)(-[^-]+)?-(?<p1>.+)\((?<c1>.+)\)\svs\s(?<p2>.+)\((?<c2>.+)\)/i
   }
 }
 
