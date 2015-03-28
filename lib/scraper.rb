@@ -1,32 +1,62 @@
 require 'open-uri'
 
 class Scraper
-  @@base_youtube_channel = "https://www.youtube.com/user/%s/videos"
-  @@base_youtube_video = "https://www.youtube.com%s"
+  @@base_youtube_domain = "https://www.youtube.com"
+  @@base_youtube_channel = @@base_youtube_domain + "/user/%s/videos"
+  @@base_youtube_video = @@base_youtube_domain + "%s"
 
-  def run
+  def self.run
     # Fetch initial channel content
-    channels = Channel.all
-
-    channels.each do |channel|
-      url = @@base_youtube_channel % channel.name
-      initial_doc = Nokogiri::HTML(open(url))
-
-      initial_doc.css(".yt-lockup-title > a").each do |element|
-        match = match_from_element_and_channel(element, channel)
-        match.save if match
-      end
-
+    Channel.all.each do |channel|
+      Scraper.new(channel).scrape_channel!
     end
-
   end
 
-  def match_from_element_and_channel(element, channel)
+  def initialize(channel)
+    @channel = channel
+  end
+
+  def scrape_channel!
+    url = @@base_youtube_channel % @channel.name
+    initial_fragment = Nokogiri::HTML(open(url))
+    create_matches_from_fragment!(initial_fragment, next_page_url_from_fragment(initial_fragment))
+  end
+
+  def create_matches_from_fragment!(fragment, next_page_url, iterations=5)
+    elements_from_fragment(fragment).each do |element|
+      match = match_from_element_and_channel(element)
+      match.save if match
+    end
+
+    if iterations > 1
+      next_fragment = fragment_from_json(open(next_page_url))
+      create_matches_from_fragment!(next_fragment,
+                                    next_page_url_from_fragment(next_fragment),
+                                    iterations=iterations-1)
+    end
+  end
+
+  def fragment_from_json(json)
+    obj = JSON::load(json)
+    # Concatenate the two components because why not?
+    Nokogiri::HTML(obj["content_html"] + obj["load_more_widget_html"])
+  end
+
+  def elements_from_fragment(fragment)
+    fragment.css(".yt-lockup-title > a")
+  end
+
+  def next_page_url_from_fragment(fragment)
+    @@base_youtube_domain + 
+      fragment.css(".browse-items-load-more-button").first.attributes["data-uix-load-more-href"].value
+  end
+
+  def match_from_element_and_channel(element)
     attributes = element.attributes
 
     match_title = attributes["title"].content
 
-    parsed_data = channel.title_regex.match(match_title)
+    parsed_data = @channel.title_regex.match(match_title)
 
     match_obj = nil
     if parsed_data
@@ -42,13 +72,13 @@ class Scraper
       }
       # TODO : Construct player objects if necessary
       # TODO : Validate character data with character table
-      
+
       if game
         match_obj = Match.find_or_initialize_by(title: match_title,
                                                 url: @@base_youtube_video % attributes["href"].content,
                                                 game: game.take,
                                                 event: nil, # TODO
-                                                channel: channel)
+                                                channel: @channel)
         match_obj.data = player_char_data
         match_obj
       else
