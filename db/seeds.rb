@@ -180,6 +180,9 @@ CHARACTER_ALIASES = {
   },
   "GGXRD" => {
     "Zato-1" => ["Eddie", "Zato-1/Eddie", "Eddie/Zato-1"]
+  },
+  "SSBM" => {
+    "Dr. Mario" => ["Doctor Mario"]
   }
 }
 
@@ -205,6 +208,10 @@ CHANNEL_NAMES_TO_DATA = {
   "teamspooky" => {
     "desc" => "TeamSpooky",
     "regex" => /(?<event>[^-]+)-(?<game>[^-]+)(-[^-]+)?-(?<p1>.+)\((?<c1>.+)\)\svs\s(?<p2>.+)\((?<c2>.+)\)/i
+  },
+  "VideoGameBootCamp" => {
+    "desc" => "VGBootCamp",
+    "regex" => /(?<event>[^-]+)-(?<p1>[^-]+)\((?<c1>[^-]+)\)\sVs\.\s(?<p2>[^-]+)\((?<c2>[^-]+)\)\s(?<game>\S+)/i
   }
 }
 
