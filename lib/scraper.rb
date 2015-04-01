@@ -18,7 +18,7 @@ class Scraper
 
   def scrape_channel!
     url = @@base_youtube_channel % @channel.name
-    initial_fragment = Nokogiri::HTML(open(url))
+    initial_fragment = Nokogiri::HTML(open(url)) # TODO : Abstract this into a retriable form
     create_matches_from_fragment!(initial_fragment, next_page_url_from_fragment(initial_fragment))
   end
 
@@ -27,7 +27,7 @@ class Scraper
       match = match_from_element_and_channel(element)
       if match
         match.save
-        Rails.logger.info("[Scraper] Successfully made match object: #{match.inspect}")
+        Rails.logger.info("[Scraper] Successfully made match object: #{match.inspect}") # TODO : Only if new object actually created
       end
 #      match.save if match
     end
