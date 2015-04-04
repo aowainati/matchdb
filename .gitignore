@@ -19,3 +19,5 @@
 
 # Ignore database.yml file
 /config/database.yml
+
+/TODO
