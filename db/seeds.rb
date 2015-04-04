@@ -81,7 +81,7 @@ GAMES_TO_CHARACTERS = {
               "Arthur",
               "C. Viper",
               "Chris",
-              "Chun Li",
+              "Chun-Li",
               "Dante",
               "Felicia",
               "Firebrand",
@@ -176,13 +176,17 @@ CHARACTER_ALIASES = {
   "USF4" => {
     "M.Bison" => ["Dictator", "M. Bison"],
     "Vega" => ["Claw"],
-    "Balrog" => ["Boxer"]
+    "Balrog" => ["Boxer"],
+    "Chun-Li" => ["Chun Li"]
   },
   "GGXRD" => {
     "Zato-1" => ["Eddie", "Zato-1/Eddie", "Eddie/Zato-1"]
   },
   "SSBM" => {
     "Dr. Mario" => ["Doctor Mario"]
+  },
+  "UMVC3" => {
+    "Chun-Li" => ["Chun Li"]
   }
 }
 

@@ -66,11 +66,18 @@ RSpec.describe Scraper do
     end
   end
 
+  describe '#youtube_id_from_url' do
+    it 'returns a youtube identifier from a youtube video URL' do
+      youtube_id = scraper.youtube_id_from_url("https://www.youtube.com/watch?v=Ipi_cwrdUVY")
+      expect(youtube_id).to eq("Ipi_cwrdUVY")
+    end
+  end
+
   describe '#match_from_element_and_channel' do
     it 'constructs a match object from a valid element and channel' do
       match = scraper.match_from_element_and_channel(dummy_element)
       expect(match.title).to eq("xWAx Vortex ( Guile ) Vs BRONXPUERTOROCK ( Akuma )  CGF 1080p - 60fps ")
-      expect(match.url).to eq("https://www.youtube.com/watch?v=3UH8yK-SVKg")
+      expect(match.youtube_id).to eq("3UH8yK-SVKg")
       expect(match.game).to eq(Game.first)
       expect(match.event).to be_nil # TODO : Add 'Event' capability later
       expect(match.channel).to eq(channel)

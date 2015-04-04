@@ -48,6 +48,10 @@ class Scraper
     Nokogiri::HTML(obj["content_html"] + obj["load_more_widget_html"])
   end
 
+  def youtube_id_from_url(url)
+    (/\?v=(?<id>.+)/).match(url)["id"]
+  end
+
   def elements_from_fragment(fragment)
     fragment.css(".yt-lockup-title > a")
   end
@@ -82,7 +86,7 @@ class Scraper
 
       if game
         match_obj = Match.find_or_initialize_by(title: match_title,
-                                                url: @@base_youtube_video % attributes["href"].content,
+                                                youtube_id: youtube_id_from_url(attributes["href"].content),
                                                 game: game,
                                                 event: nil, # TODO
                                                 channel: @channel)
