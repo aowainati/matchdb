@@ -1,4 +1,4 @@
-<h3><%= @character.game.name %> > <%= @character.name %></h3>
+<h3><%= link_to(@character.game.name, game_path(@character.game)) %> > <%= @character.name %></h3>
 
 <ul>
 <% @character.matches.each do |match| %>

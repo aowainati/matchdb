@@ -6,7 +6,7 @@ class Match < ActiveRecord::Base
   validates :title, :youtube_id, :game, :data, presence: true
 
   def youtube_thumb
-    "http://i.ytimg.com/vi_webp/%s/mqdefault.webp" % youtube_id
+    "https://i.ytimg.com/vi/%s/mqdefault.jpg" % youtube_id
   end
 
   def youtube_url
