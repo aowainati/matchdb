@@ -3,4 +3,8 @@ class Character < ActiveRecord::Base
 
   validates :name, presence: true, length: { minimum: 1 }
   validates :game, :aliases, presence: true
+
+  def matches
+    
+  end
 end

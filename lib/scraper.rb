@@ -87,12 +87,15 @@ class Scraper
       game = Game.where("? = ANY (aliases)", parsed_data["game"].strip).take
 
       # TODO : Make this more robust
+      # TODO : Make this work for multiple characters
       # Invariant: There will always be exactly 2 players
       #            Each player will have one or more characters
       #            Impossible to know exactly which chars played against which if multiple chars selected
       player_char_data = {
-        parsed_data["p1"].strip => parsed_data["c1"].strip, # TODO: Make value an array
-        parsed_data["p2"].strip => parsed_data["c2"].strip
+        "p1" => parsed_data["p1"].strip,
+        "p2" => parsed_data["p2"].strip,
+        "c1" => parsed_data["c1"].strip,
+        "c2" => parsed_data["c2"].strip
       }
 
       # TODO : Construct player objects if necessary

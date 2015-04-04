@@ -13,7 +13,7 @@ RSpec.describe Scraper do
   let(:next_page_json) {
     File.open("spec/test_data/channel_next_page.json")
   }
-  let(:dummy_element) { Nokogiri::HTML.fragment("<a class=\"yt-uix-sessionlink yt-uix-tile-link  spf-link  yt-ui-ellipsis yt-ui-ellipsis-2\" dir=\"ltr\" title=\"xWAx Vortex ( Guile ) Vs BRONXPUERTOROCK ( Akuma )  CGF 1080p - 60fps \" aria-describedby=\"description-id-742665\" data-sessionlink=\"ei=0McVVdPKLOSv-APq0IC4Dg&amp;feature=c4-videos-u&amp;ved=CB8Qvxs\" href=\"/watch?v=3UH8yK-SVKg\">xWAx Vortex ( Guile ) Vs BRONXPUERTOROCK ( Akuma )  CGF 1080p - 60fps </a>").children.first } 
+  let(:dummy_element) { Nokogiri::HTML.fragment("<a class=\"yt-uix-sessionlink yt-uix-tile-link  spf-link  yt-ui-ellipsis yt-ui-ellipsis-2\" dir=\"ltr\" title=\"xWAx Vortex ( Guile ) Vs BRONXPUERTOROCK ( Akuma )  CGF 1080p - 60fps \" aria-describedby=\"description-id-742665\" data-sessionlink=\"ei=0McVVdPKLOSv-APq0IC4Dg&amp;feature=c4-videos-u&amp;ved=CB8Qvxs\" href=\"/watch?v=3UH8yK-SVKg\">xWAx Vortex ( Guile ) Vs BRONXPUERTOROCK ( Akuma )  CGF 1080p - 60fps </a>").children.first }
   let(:dummy_element_invalid) { Nokogiri::HTML.fragment("<a class=\"yt-uix-sessionlink yt-uix-tile-link  spf-link  yt-ui-ellipsis yt-ui-ellipsis-2\" dir=\"ltr\" title=\"This Title IS Invalid\" aria-describedby=\"description-id-742665\" data-sessionlink=\"ei=0McVVdPKLOSv-APq0IC4Dg&amp;feature=c4-videos-u&amp;ved=CB8Qvxs\" href=\"/watch?v=3UH8yK-SVKg\">This Title IS Invalid</a>").children.first }
   let(:game) { Game.first }
   let(:channel) { build(:channel) }
@@ -25,7 +25,7 @@ RSpec.describe Scraper do
       scraper.create_matches_from_fragment!(dummy_fragment, "foo", iterations=1)
       expect(Match.count).to eq(30)
     end
-    
+
     it 'recurses the correct number of iterations' do
       allow(scraper).to receive(:open) { double }
       allow(scraper).to receive(:fragment_from_json) { dummy_fragment }
@@ -81,7 +81,10 @@ RSpec.describe Scraper do
       expect(match.game).to eq(Game.first)
       expect(match.event).to be_nil # TODO : Add 'Event' capability later
       expect(match.channel).to eq(channel)
-      expect(match.data).to eq({"xWAx Vortex" => "Guile", "BRONXPUERTOROCK" => "Akuma"})
+      expect(match.data).to eq({ "p1" => "xWAx Vortex",
+                                 "c1" => "Guile",
+                                 "p2" => "BRONXPUERTOROCK",
+                                 "c2" => "Akuma"})
     end
 
     it 'returns nil from an element with an invalid game' do
