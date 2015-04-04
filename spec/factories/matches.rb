@@ -10,5 +10,6 @@ FactoryGirl.define do
               "p2" => "player2",
               "c1" => "character1",
               "c2" => "character2" }}
+    f.channel { build(:channel) }
   end
 end

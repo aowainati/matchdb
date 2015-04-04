@@ -1,3 +1,12 @@
-<h4>THIS IS JUST ONE CHARACTER:</h4>
+<h3><%= @character.game.name %> > <%= @character.name %></h3>
 
-<%= @character.name %>
+<ul>
+<% @character.matches.each do |match| %>
+    <li>
+        <a href='<%= match.youtube_url %>'>
+            <div><%= match.title %></div>
+            <div><%= image_tag(match.youtube_thumb) %></div>
+        </a>
+    </li>
+<% end %>
+</ul>
