@@ -1,0 +1,8 @@
+CHECK OUT THIS GAME:<br />
+<%= @game.name %>
+
+<ul>
+<% @game.characters.each do |char| %>
+    <li><%= link_to(char.name, game_character_path(@game, char)) %></li>
+<% end %>
+</ul>
