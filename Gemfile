@@ -42,6 +42,9 @@ end
 # Use Phusion Passenger as the app server
 gem 'passenger'
 
+# Provides 'with_retries'
+gem 'retries'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
