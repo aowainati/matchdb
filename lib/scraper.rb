@@ -19,12 +19,15 @@ class Scraper
   def scrape_channel!
     Rails.logger.info("[Scraper] Beginning to scrape #{@channel.name} now!")
     url = @@base_youtube_channel % @channel.name
-    initial_fragment = Nokogiri::HTML(open(url)) # TODO : Abstract this into a retriable method
+    initial_fragment = Nokogiri::HTML(open_url(url))
     create_matches_from_fragment!(initial_fragment, next_page_url_from_fragment(initial_fragment))
   end
 
-  def create_matches_from_fragment!(fragment, next_page_url, iterations=20)
-    # TODO : Add base case if next_page_url is nil
+  def create_matches_from_fragment!(fragment, next_page_url, iterations=50)
+    if !next_page_url
+      Rails.logger.info("[Scraper] All out of videos for channel #{@channel.name}, finishing scrape.")
+      return
+    end
 
     elements_from_fragment(fragment).each do |element|
       match = match_from_element_and_channel(element)
@@ -39,6 +42,12 @@ class Scraper
       create_matches_from_fragment!(next_fragment,
                                     next_page_url_from_fragment(next_fragment),
                                     iterations=iterations-1)
+    end
+  end
+
+  def open_url(url)
+    with_retries(max_tries: 3) do |i|
+      open(url)
     end
   end
 
@@ -57,8 +66,13 @@ class Scraper
   end
 
   def next_page_url_from_fragment(fragment)
-    @@base_youtube_domain + 
-      fragment.css(".browse-items-load-more-button").first.attributes["data-uix-load-more-href"].value
+    load_more_button = fragment.css(".browse-items-load-more-button").first
+    if load_more_button
+      @@base_youtube_domain +
+        load_more_button.attributes["data-uix-load-more-href"].value
+    else
+      nil
+    end
   end
 
   def match_from_element_and_channel(element)
