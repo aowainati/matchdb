@@ -38,7 +38,7 @@ class Scraper
     end
 
     if iterations > 1
-      next_fragment = fragment_from_json(open(next_page_url))
+      next_fragment = fragment_from_json(open_url(next_page_url))
       create_matches_from_fragment!(next_fragment,
                                     next_page_url_from_fragment(next_fragment),
                                     iterations=iterations-1)
