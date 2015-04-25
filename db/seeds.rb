@@ -37,7 +37,7 @@ GAMES_TO_CHARACTERS = {
              "Akuma",
              "Balrog",
              "Blanka",
-             "C.Viper",
+             "C. Viper",
              "Cammy",
              "Chun-Li",
              "Cody",
@@ -177,7 +177,8 @@ CHARACTER_ALIASES = {
     "M.Bison" => ["Dictator", "M. Bison"],
     "Vega" => ["Claw"],
     "Balrog" => ["Boxer"],
-    "Chun-Li" => ["Chun Li"]
+    "Chun-Li" => ["Chun Li"],
+    "C. Viper" => ["Viper", "C.Viper"]
   },
   "GGXRD" => {
     "Zato-1" => ["Eddie", "Zato-1/Eddie", "Eddie/Zato-1"]
@@ -186,7 +187,8 @@ CHARACTER_ALIASES = {
     "Dr. Mario" => ["Doctor Mario"]
   },
   "UMVC3" => {
-    "Chun-Li" => ["Chun Li"]
+    "Chun-Li" => ["Chun Li"],
+    "C. Viper" => ["Viper", "C.Viper"]
   }
 }
 
