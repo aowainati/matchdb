@@ -36,9 +36,9 @@ RSpec.describe Scraper do
     end
   end
 
-  describe '#elements_from_fragment' do
+  describe '#a_tag_from_element' do
     it 'returns a collection of "a" elements' do
-      elements = scraper.elements_from_fragment(dummy_fragment)
+      elements = scraper.a_tag_from_element(dummy_fragment)
       expect(elements.count).to eq(30)
       elements.each do |e|
         expect(e.name).to eq("a")
@@ -46,7 +46,7 @@ RSpec.describe Scraper do
     end
 
     it 'returns a collection of "a" elements from an AJAX response' do
-      elements = scraper.elements_from_fragment(scraper.fragment_from_json(next_page_json))
+      elements = scraper.a_tag_from_element(scraper.fragment_from_json(next_page_json))
       expect(elements.count).to eq(30)
       elements.each do |e|
         expect(e.name).to eq("a")

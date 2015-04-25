@@ -43,6 +43,9 @@ gem 'passenger'
 # Provides 'with_retries'
 gem 'retries'
 
+# Chronic provides natural language date parsing
+gem 'chronic'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'

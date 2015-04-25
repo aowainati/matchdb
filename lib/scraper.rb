@@ -23,17 +23,17 @@ class Scraper
     create_matches_from_fragment!(initial_fragment, next_page_url_from_fragment(initial_fragment))
   end
 
-  def create_matches_from_fragment!(fragment, next_page_url, iterations=50)
+  def create_matches_from_fragment!(fragment, next_page_url, iterations=75)
     if !next_page_url
       Rails.logger.info("[Scraper] All out of videos for channel #{@channel.name}, finishing scrape.")
       return
     end
 
     elements_from_fragment(fragment).each do |element|
-      match = match_from_element_and_channel(element)
+      match = match_from_element(element)
       if match
+        Rails.logger.info("[Scraper] Successfully made match object: #{match.inspect}") if !match.persisted?
         match.save
-        Rails.logger.info("[Scraper] Successfully made match object: #{match.inspect}") # TODO : Only if new object actually created
       end
     end
 
@@ -62,7 +62,19 @@ class Scraper
   end
 
   def elements_from_fragment(fragment)
+    fragment.css(".yt-lockup-content")
+  end
+
+  def a_tag_from_element(fragment)
     fragment.css(".yt-lockup-title > a")
+  end
+
+  def timestamp_from_element(element)
+    Chronic.parse(element.css(".yt-lockup-meta-info > li")[1].content)
+  end
+
+  def views_from_element(element)
+    element.css(".yt-lockup-meta-info > li")[0].content.split().first.delete(',').to_i
   end
 
   def next_page_url_from_fragment(fragment)
@@ -75,8 +87,8 @@ class Scraper
     end
   end
 
-  def match_from_element_and_channel(element)
-    attributes = element.attributes
+  def match_from_element(element)
+    attributes = a_tag_from_element(element).first.attributes
 
     match_title = attributes["title"].content
 
@@ -102,12 +114,15 @@ class Scraper
       # TODO : Validate character data with character table
 
       if game
-        match_obj = Match.find_or_initialize_by(title: match_title,
-                                                youtube_id: youtube_id_from_url(attributes["href"].content),
-                                                game: game,
-                                                event: nil, # TODO
-                                                channel: @channel)
-        match_obj.data = player_char_data
+        youtube_id = youtube_id_from_url(attributes["href"].content)
+        match_obj = Match.find_or_initialize_by(youtube_id: youtube_id)
+        match_obj.assign_attributes(title: match_title,
+                                    youtube_timestamp: timestamp_from_element(element),
+                                    youtube_views: views_from_element(element),
+                                    game: game,
+                                    event: nil, # TODO
+                                    channel: @channel,
+                                    data: player_char_data)
         match_obj
       else
         Rails.logger.warn("[Scraper] Couldn't find game #{parsed_data['game']}")
