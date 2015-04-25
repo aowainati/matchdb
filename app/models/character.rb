@@ -7,6 +7,9 @@ class Character < ActiveRecord::Base
   # TODO : Add sort parameters for this method
   # TODO : Add pagination for this method
   def matches
-    Match.where(game: game).where("data->>'c1' IN (?) OR data->>'c2' IN (?)", aliases, aliases)
+    Match
+      .where(game: game)
+      .where("data->>'c1' IN (?) OR data->>'c2' IN (?)", aliases, aliases)
+      .order(youtube_timestamp: :desc)
   end
 end
